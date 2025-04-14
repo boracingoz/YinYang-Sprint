@@ -16,17 +16,23 @@ public class CharacterController : MonoBehaviour
     private Rigidbody _rb;
     private bool isGrounded = true;
     private bool isJump = false;
-    private Vector3 _targetPosition;
-
+    [SerializeField] private Vector3 initialPos;
+    private float initialXpos;
 
     [Header("Rotation Settings")]
     public float tiltAngle = 15f;
     public float rotationSmoothness = 5f;
 
+    private void Awake()
+    {
+       transform.position = initialPos;
+       initialXpos = initialPos.x;
+    }
+
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
-        _targetPosition = transform.position;
+        _currentLane = 0;
     }
 
     // Update is called once per frame
@@ -39,20 +45,20 @@ public class CharacterController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector3 forwardMove = Vector3.forward * forwardSpeed;
-        Vector3 targetPos = new Vector3((_currentLane - 1) * laneDistance, _rb.position.y, _rb.position.z) + forwardMove * Time.fixedDeltaTime;
+        float targetX = initialXpos + (_currentLane * laneDistance);
+        Vector3 targetPos = new Vector3(targetX, _rb.position.y, _rb.position.z);
         Vector3 newPos = Vector3.Lerp(_rb.position, targetPos, Time.fixedDeltaTime * laneChangeSpeed);
         _rb.MovePosition(newPos);
     }
 
     private void HandleLaneChange()
     {
-        if (Input.GetKeyDown(KeyCode.LeftArrow)&& _currentLane > 0)
+        if (Input.GetKeyDown(KeyCode.LeftArrow)&& _currentLane > -1)
         {
             _currentLane--;
             
         }
-        else if (Input.GetKeyDown(KeyCode.RightArrow) && _currentLane < 2)
+        else if (Input.GetKeyDown(KeyCode.RightArrow) && _currentLane < 1)
         {
             _currentLane++;
         }
@@ -77,20 +83,35 @@ public class CharacterController : MonoBehaviour
     private void ApplyTiltRotation()
     {
         float targetYrotation = 0;
+        float currentX = transform.position.x;
+        float targetX = initialXpos + (_currentLane * laneDistance);
 
-        if (Mathf.Abs(transform.position.x - _targetPosition.x)>0.01f)
+        if (Mathf.Abs(currentX - targetX) > 0.01f)
         {
-            if (_targetPosition.x > transform.position.x)
+            if (targetX > currentX)
             {
-                targetYrotation = tiltAngle;
+               targetYrotation = tiltAngle;
             }
             else
             {
                 targetYrotation = -tiltAngle;
             }
         }
-
+       
         Quaternion targetRotation = Quaternion.Euler(0, targetYrotation, 0);
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSmoothness);
     }
+
+    public void UpdateZpos(float zOffset)
+    {
+        Vector3 pos = _rb.position;
+        pos.z = initialPos.z + zOffset;
+        _rb.MovePosition(pos);
+    }
+
+    public int GetCurrentLane()
+    {
+        return _currentLane;
+    }
+
 }
