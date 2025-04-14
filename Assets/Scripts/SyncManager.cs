@@ -5,27 +5,24 @@ namespace Assets.Scripts
 {
     public class SyncManager : MonoBehaviour
     {
-        public CharacterController[] characters;
-        public float forwardSpeed = 5f;
+         public static SyncManager Instance;
 
-        private float zProgress = 0f;
+        public float forwardSpeed = 2f;
+        private float zProgress = 1f;
 
-        private void Start()
+        public float ZProgress => zProgress;
+
+
+
+        private void Awake()
         {
-            foreach (var character in characters)
-            {
-                character.forwardSpeed = forwardSpeed;
-            }
+            Instance = this;
+           
         }
 
         private void FixedUpdate()
         {
             zProgress += forwardSpeed * Time.fixedDeltaTime;
-
-            foreach (var character in characters)
-            {
-                character.UpdateZpos(zProgress);
-            }
         }
     }
 }

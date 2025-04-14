@@ -1,37 +1,41 @@
-﻿using System.Collections;
+﻿using Assets.Scripts;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterController : MonoBehaviour
+public class CustomCharacterController : MonoBehaviour
 {
     [Header("Movement Settings")]
-    public float forwardSpeed = 5f;
     public float laneDistance = 2.5f;
     public float laneChangeSpeed = 5f;
     public float jumpForce = 7f;
     public LayerMask groundLayer;
 
+    [Header("Rotation Settings")]
+    public float tiltAngle = 15f;
+    public float rotationSmoothness = 5f;
 
     private int _currentLane = 1;
     private Rigidbody _rb;
     private bool isGrounded = true;
     private bool isJump = false;
+
     [SerializeField] private Vector3 initialPos;
     private float initialXpos;
 
-    [Header("Rotation Settings")]
-    public float tiltAngle = 15f;
-    public float rotationSmoothness = 5f;
 
     private void Awake()
     {
-       transform.position = initialPos;
-       initialXpos = initialPos.x;
+        _rb = GetComponent<Rigidbody>();
+
+        if (initialPos == Vector3.zero)
+            initialPos = transform.position;
+
+        initialXpos = initialPos.x;
     }
 
     void Start()
     {
-        _rb = GetComponent<Rigidbody>();
         _currentLane = 0;
     }
 
@@ -46,10 +50,16 @@ public class CharacterController : MonoBehaviour
     private void FixedUpdate()
     {
         float targetX = initialXpos + (_currentLane * laneDistance);
-        Vector3 targetPos = new Vector3(targetX, _rb.position.y, _rb.position.z);
-        Vector3 newPos = Vector3.Lerp(_rb.position, targetPos, Time.fixedDeltaTime * laneChangeSpeed);
+        float syncedZ = initialPos.z + SyncManager.Instance.ZProgress;
+
+        float newX = Mathf.Lerp(_rb.position.x, targetX, Time.fixedDeltaTime * laneChangeSpeed);
+        float newZ = Mathf.Lerp(_rb.position.z, syncedZ, Time.fixedDeltaTime * 10f);
+
+        Vector3 newPos = new Vector3(newX, _rb.position.y, newZ);
         _rb.MovePosition(newPos);
+
     }
+
 
     private void HandleLaneChange()
     {
@@ -88,25 +98,12 @@ public class CharacterController : MonoBehaviour
 
         if (Mathf.Abs(currentX - targetX) > 0.01f)
         {
-            if (targetX > currentX)
-            {
-               targetYrotation = tiltAngle;
-            }
-            else
-            {
-                targetYrotation = -tiltAngle;
-            }
+            targetYrotation = (targetX > currentX) ? tiltAngle : -tiltAngle;
         }
-       
-        Quaternion targetRotation = Quaternion.Euler(0, targetYrotation, 0);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSmoothness);
-    }
 
-    public void UpdateZpos(float zOffset)
-    {
-        Vector3 pos = _rb.position;
-        pos.z = initialPos.z + zOffset;
-        _rb.MovePosition(pos);
+        Quaternion targetRotation = Quaternion.Euler(0, targetYrotation, 0);
+        Quaternion smoothedRotation = Quaternion.Lerp(_rb.rotation, targetRotation, Time.deltaTime * rotationSmoothness);
+        _rb.MoveRotation(smoothedRotation);
     }
 
     public int GetCurrentLane()
