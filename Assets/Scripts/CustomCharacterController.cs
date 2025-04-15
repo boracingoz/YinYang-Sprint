@@ -19,6 +19,7 @@ public class CustomCharacterController : MonoBehaviour
     private Rigidbody _rb;
     private bool isGrounded = true;
     private bool isJump = false;
+    private Animator animator;
 
     [SerializeField] private Vector3 initialPos;
     private float initialXpos;
@@ -36,6 +37,7 @@ public class CustomCharacterController : MonoBehaviour
 
     void Start()
     {
+        animator = GetComponent<Animator>();
         _currentLane = 0;
     }
 
@@ -45,6 +47,7 @@ public class CustomCharacterController : MonoBehaviour
         HandleLaneChange();
         HandleJump();
         ApplyTiltRotation();
+        CharacterAnim();
     }
 
     private void FixedUpdate()
@@ -111,4 +114,11 @@ public class CustomCharacterController : MonoBehaviour
         return _currentLane;
     }
 
+    public void CharacterAnim()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            animator.SetTrigger("SwordAttack");
+        }
+    }
 }
