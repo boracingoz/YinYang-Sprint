@@ -5,15 +5,11 @@ using UnityEngine;
 
 public class CustomCharacterController : MonoBehaviour
 {
-    [Header("Movement Settings")]
-    public float laneDistance = 2.5f;
-    public float laneChangeSpeed = 5f;
-    public float jumpForce = 7f;
+    [Header("Character Settings")]
+    public CharacterSettings characterSettings;
     public LayerMask groundLayer;
 
-    [Header("Rotation Settings")]
-    public float tiltAngle = 15f;
-    public float rotationSmoothness = 5f;
+    
 
     private int _currentLane = 1;
     private Rigidbody _rb;
@@ -52,10 +48,10 @@ public class CustomCharacterController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        float targetX = initialXpos + (_currentLane * laneDistance);
+        float targetX = initialXpos + (_currentLane * characterSettings.laneDistance);
         float syncedZ = initialPos.z + SyncManager.Instance.ZProgress;
 
-        float newX = Mathf.Lerp(_rb.position.x, targetX, Time.fixedDeltaTime * laneChangeSpeed);
+        float newX = Mathf.Lerp(_rb.position.x, targetX, Time.fixedDeltaTime * characterSettings.laneChangeSpeed);
         float newZ = Mathf.Lerp(_rb.position.z, syncedZ, Time.fixedDeltaTime * 10f);
 
         Vector3 newPos = new Vector3(newX, _rb.position.y, newZ);
@@ -83,7 +79,7 @@ public class CustomCharacterController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space)&& isGrounded && !isJump)
         {
-            _rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            _rb.AddForce(Vector3.up * characterSettings.jumpingForce, ForceMode.Impulse);
             isJump = true;
         }
 
@@ -97,15 +93,15 @@ public class CustomCharacterController : MonoBehaviour
     {
         float targetYrotation = 0;
         float currentX = transform.position.x;
-        float targetX = initialXpos + (_currentLane * laneDistance);
+        float targetX = initialXpos + (_currentLane * characterSettings.laneDistance);
 
         if (Mathf.Abs(currentX - targetX) > 0.01f)
         {
-            targetYrotation = (targetX > currentX) ? tiltAngle : -tiltAngle;
+            targetYrotation = (targetX > currentX) ? characterSettings.tiltAngel : - characterSettings.tiltAngel;
         }
 
         Quaternion targetRotation = Quaternion.Euler(0, targetYrotation, 0);
-        Quaternion smoothedRotation = Quaternion.Lerp(_rb.rotation, targetRotation, Time.deltaTime * rotationSmoothness);
+        Quaternion smoothedRotation = Quaternion.Lerp(_rb.rotation, targetRotation, Time.deltaTime * characterSettings.rotationSmoothness);
         _rb.MoveRotation(smoothedRotation);
     }
 
