@@ -450,8 +450,10 @@ MonoBehaviour:
   spawnPoints:
   - transform: {fileID: 412487187}
     nextSpawnTime: 0
+    currentSpawnRate: 0
   - transform: {fileID: 1538699700}
-    nextSpawnTime: 0
+    nextSpawnTime: 1
+    currentSpawnRate: 0
   obstaclePrefab: {fileID: 2171632531822290048, guid: 9538562fc2e45144d960a7d58c22cf47,
     type: 3}
   intialSpawnRate: 2
@@ -1262,8 +1264,10 @@ MonoBehaviour:
   spawnPoints:
   - transform: {fileID: 412487187}
     nextSpawnTime: 0
+    currentSpawnRate: 0
   - transform: {fileID: 1538699700}
     nextSpawnTime: 0
+    currentSpawnRate: 0
   obstaclePrefab: {fileID: 2171632531822290048, guid: 9538562fc2e45144d960a7d58c22cf47,
     type: 3}
   intialSpawnRate: 2

@@ -12,6 +12,7 @@ public class ObstacleSpawner : MonoBehaviour
     {
         public Transform transform;
         public float nextSpawnTime;
+        public float currentSpawnRate;
     }
 
     [Header("Spawn Settings")]
@@ -29,14 +30,19 @@ public class ObstacleSpawner : MonoBehaviour
 
     private void Awake()
     {
+        InitializeSpawnPoints();
         InitializePool();
+    }
 
+    private void InitializeSpawnPoints()
+    {
         foreach (var point in spawnPoints)
         {
             if (point.transform == null)
             {
-                Debug.LogWarning("Spawn pointte atama yok.");
+                Debug.LogWarning("Spawn point boş!");
             }
+            point.currentSpawnRate = intialSpawnRate;
         }
     }
 
@@ -94,20 +100,26 @@ public class ObstacleSpawner : MonoBehaviour
         obstacle.transform.position = spawnPos;
         obstacle.transform.rotation = spawnPoint.transform.rotation;
 
-
-        obstacle.GetComponent<Obstacle>().OnDisableAction = () =>
+        Obstacle obstacleComponent = obstacle.GetComponent<Obstacle>();
+        if (obstacleComponent != null)
         {
-            obstacle.SetActive(false);
-            _obstaclePool.Enqueue(obstacle);
-        };
+            obstacleComponent.OnDisableAction = () =>
+            {
+                if (obstacle.activeSelf)
+                {
+                    obstacle.SetActive(false);
+                    _obstaclePool.Enqueue(obstacle);
+                }
+            };
+        }
 
-        spawnPoint.nextSpawnTime = Time.time + intialSpawnRate;
+        spawnPoint.nextSpawnTime = Time.time + spawnPoint.currentSpawnRate;
     }
 
 
     private void UpdateSpawnRate(SpawnPoint point)
     {
-        intialSpawnRate = Mathf.Max(minSpawnRate, intialSpawnRate - (spawnRateDecrease * Time.deltaTime));
+        point.currentSpawnRate = Mathf.Max(minSpawnRate, intialSpawnRate - (spawnRateDecrease * Time.deltaTime));
     }
 
     private void OnDrawGizmos()
