@@ -6,7 +6,7 @@ namespace Assets.Scripts.Spawner
 {
     public class Obstacle : MonoBehaviour
     {
-        [SerializeField] private float _speedMultiplier = 1.2f;
+        public ObstacleSettings obstacleSettings;
         public Action OnDisableAction;
 
         private float _moveSpeed;
@@ -14,7 +14,21 @@ namespace Assets.Scripts.Spawner
 
         private void OnEnable()
         {
-            _moveSpeed = Assets.Scripts.SyncManager.Instance.forwardSpeed * _speedMultiplier;
+            if (SyncManager.Instance == null)
+            {
+                Debug.LogError("Sync Manager not initialized!");
+                return;
+            }
+
+
+            if (obstacleSettings == null)
+            {
+                _moveSpeed = Assets.Scripts.SyncManager.Instance.forwardSpeed * 1.2f;
+            }
+            else
+            {
+                _moveSpeed = Assets.Scripts.SyncManager.Instance.forwardSpeed * obstacleSettings.speedMultiplier;
+            }
         }
 
         private void OnDisable()
@@ -24,9 +38,11 @@ namespace Assets.Scripts.Spawner
 
         private void Update()
         {
+            float speed = Assets.Scripts.SyncManager.Instance.obstacleSpeed;
             transform.Translate(Vector3.back * _moveSpeed * Time.deltaTime);
 
-            if (transform.position.z < -10f)
+            float despawnDistance = obstacleSettings != null ? obstacleSettings.despawnDistance : -10f;
+            if (transform.position.z < despawnDistance)
             {
                 gameObject.SetActive(false);
             }

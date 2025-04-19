@@ -106,4 +106,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b97a055162747ef49afde6171ba4bd4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speedMultiplier: 1.5
+  obstacleSettings: {fileID: 11400000, guid: 6b7801a61a5e9d34ab9c5aa4472a57db, type: 2}

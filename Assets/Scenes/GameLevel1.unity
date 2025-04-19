@@ -457,8 +457,8 @@ MonoBehaviour:
   obstaclePrefab: {fileID: 2171632531822290048, guid: 9538562fc2e45144d960a7d58c22cf47,
     type: 3}
   intialSpawnRate: 2
-  minSpawnRate: 0.5
-  spawnRateDecrease: 0.1
+  minSpawnRate: 2
+  spawnRateDecrease: 0.5
   laneOffset: 2
 --- !u!1 &413784047
 GameObject:
@@ -949,7 +949,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44a29230b80c7ee47890e49996827c0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forwardSpeed: 2
+  forwardSpeed: 4
+  obstacleSpeed: 10
 --- !u!1 &997340834
 GameObject:
   m_ObjectHideFlags: 0
@@ -1263,16 +1264,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPoints:
   - transform: {fileID: 412487187}
-    nextSpawnTime: 0
+    nextSpawnTime: 1
     currentSpawnRate: 0
   - transform: {fileID: 1538699700}
-    nextSpawnTime: 0
+    nextSpawnTime: 1
     currentSpawnRate: 0
   obstaclePrefab: {fileID: 2171632531822290048, guid: 9538562fc2e45144d960a7d58c22cf47,
     type: 3}
   intialSpawnRate: 2
-  minSpawnRate: 0.5
-  spawnRateDecrease: 0.1
+  minSpawnRate: 2
+  spawnRateDecrease: 0.5
   laneOffset: 2
 --- !u!4 &1538699700
 Transform:

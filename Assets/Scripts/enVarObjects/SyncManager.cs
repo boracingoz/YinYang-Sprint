@@ -8,6 +8,8 @@ namespace Assets.Scripts
          public static SyncManager Instance;
 
         public float forwardSpeed = 2f;
+        public float obstacleSpeed = 2.4f; 
+
         private float zProgress = 1f;
 
         public float ZProgress => zProgress;
