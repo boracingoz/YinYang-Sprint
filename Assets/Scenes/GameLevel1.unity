@@ -454,8 +454,10 @@ MonoBehaviour:
   - transform: {fileID: 1538699700}
     nextSpawnTime: 1
     currentSpawnRate: 0
-  obstaclePrefab: {fileID: 2171632531822290048, guid: 9538562fc2e45144d960a7d58c22cf47,
-    type: 3}
+  obstaclePrefab:
+  - {fileID: 2171632531822290048, guid: 9538562fc2e45144d960a7d58c22cf47, type: 3}
+  - {fileID: 6513594343633890006, guid: f89b427c24175e14199a0bb4169eda28, type: 3}
+  - {fileID: 3557919939954409734, guid: 18af1e357f8da5d40a727fef33f2faec, type: 3}
   intialSpawnRate: 2
   minSpawnRate: 2
   spawnRateDecrease: 0.5
@@ -1269,8 +1271,10 @@ MonoBehaviour:
   - transform: {fileID: 1538699700}
     nextSpawnTime: 1
     currentSpawnRate: 0
-  obstaclePrefab: {fileID: 2171632531822290048, guid: 9538562fc2e45144d960a7d58c22cf47,
-    type: 3}
+  obstaclePrefab:
+  - {fileID: 2171632531822290048, guid: 9538562fc2e45144d960a7d58c22cf47, type: 3}
+  - {fileID: 6513594343633890006, guid: f89b427c24175e14199a0bb4169eda28, type: 3}
+  - {fileID: 3557919939954409734, guid: 18af1e357f8da5d40a727fef33f2faec, type: 3}
   intialSpawnRate: 2
   minSpawnRate: 2
   spawnRateDecrease: 0.5

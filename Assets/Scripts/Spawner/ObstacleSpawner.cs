@@ -17,7 +17,7 @@ public class ObstacleSpawner : MonoBehaviour
 
     [Header("Spawn Settings")]
     public SpawnPoint[] spawnPoints;
-    public GameObject obstaclePrefab;
+    public GameObject[] obstaclePrefab;
     public float intialSpawnRate = 2f;
     public float minSpawnRate = 0.5f;
     public float spawnRateDecrease = 0.1f;
@@ -25,13 +25,23 @@ public class ObstacleSpawner : MonoBehaviour
     [Header("Lane  Settings")]
     public float laneOffset = 2f;
 
-    private Queue<GameObject> _obstaclePool = new Queue<GameObject>();
-    private int _poolSize = 10;
+    private Dictionary <int, Queue<GameObject>> _obstaclePool = new Dictionary <int, Queue<GameObject>>();
+    private int _poolSizePerType = 5;
+
+    private Transform _obstacleParent;
 
     private void Awake()
     {
+        CreateObstacleParent();
         InitializeSpawnPoints();
         InitializePool();
+    }
+
+    private void CreateObstacleParent()
+    {
+        _obstacleParent = new GameObject("SpawnObstacles").transform;
+        _obstacleParent.SetParent(transform);
+        _obstacleParent.localPosition = Vector3.zero;
     }
 
     private void InitializeSpawnPoints()
@@ -48,33 +58,56 @@ public class ObstacleSpawner : MonoBehaviour
 
     private void InitializePool()
     {
-        for (int i = 0; i < _poolSize; i++)
+        if (obstaclePrefab.Length == 0)
         {
-            GameObject obj = Instantiate(obstaclePrefab);
-            obj.SetActive(false);
-            _obstaclePool.Enqueue(obj);
+            Debug.LogError("obstacle atanmamış!");
+            return;
+        }
+
+
+        for (int i = 0; i <obstaclePrefab.Length; i++)
+        {
+            Queue<GameObject> pool = new Queue<GameObject> ();
+            _obstaclePool[i] = pool;
+            for (int j = 0; j < _poolSizePerType; j++)
+            {
+                CreateNewObstacle(i);
+            }
         }
     }
 
-    GameObject GetPooledObstacle()
+    private GameObject CreateNewObstacle(int obstacleTypeIndex)
     {
-        if (_obstaclePool.Count == 0)
+        if (obstacleTypeIndex <0 || obstacleTypeIndex >= obstaclePrefab.Length)
         {
-            ExpandPool();
+            Debug.LogError("Geçersiz engel indeksi: " + obstacleTypeIndex);
+            return null;
         }
-        GameObject obj = _obstaclePool.Dequeue();
-        obj.SetActive(true);
+
+        GameObject obj = Instantiate(obstaclePrefab[obstacleTypeIndex], _obstacleParent);
+        obj.SetActive(false);
+        _obstaclePool[obstacleTypeIndex].Enqueue(obj);
         return obj;
     }
 
-    private void ExpandPool()
+    GameObject GetPooledObstacle(int obstacleTypeIndex)
     {
-        for (int i = 0; i < 5; i++)
+        if (!_obstaclePool.ContainsKey(obstacleTypeIndex))
         {
-            GameObject obj = Instantiate(obstaclePrefab);
-            obj.SetActive(false);
-            _obstaclePool.Enqueue(obj);
+            Debug.LogError("Bu tipte engel yok: " + obstacleTypeIndex);
+            return null;
         }
+
+        Queue<GameObject> pool = _obstaclePool[obstacleTypeIndex];
+
+        if (pool.Count == 0)
+        {
+            return CreateNewObstacle(obstacleTypeIndex);
+        }
+
+        GameObject obj = pool.Dequeue();
+        obj.SetActive(true);
+        return obj;
     }
 
     private void Update()
@@ -92,7 +125,10 @@ public class ObstacleSpawner : MonoBehaviour
 
     private void SpawnObstacle(SpawnPoint spawnPoint)
     {
-        GameObject obstacle = GetPooledObstacle();
+        int obstacleTypeIndex = UnityEngine.Random.Range(0,obstaclePrefab.Length);
+        GameObject obstacle = GetPooledObstacle(obstacleTypeIndex);
+
+        if (obstacle == null) return;
 
         int lane = UnityEngine.Random.Range(-1, 2);
         Vector3 spawnPos = spawnPoint.transform.position + new Vector3(lane * laneOffset, 0, 0);
@@ -103,12 +139,13 @@ public class ObstacleSpawner : MonoBehaviour
         Obstacle obstacleComponent = obstacle.GetComponent<Obstacle>();
         if (obstacleComponent != null)
         {
+            int capturedTypeIndex = obstacleTypeIndex;
             obstacleComponent.OnDisableAction = () =>
             {
-                if (obstacle.activeSelf)
+                if (obstacle != null && obstacle.activeSelf)
                 {
                     obstacle.SetActive(false);
-                    _obstaclePool.Enqueue(obstacle);
+                    _obstaclePool[capturedTypeIndex].Enqueue(obstacle);
                 }
             };
         }
