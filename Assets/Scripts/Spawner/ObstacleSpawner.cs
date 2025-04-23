@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Spawner;
+﻿using Assets.Scripts.Managers;
+using Assets.Scripts.Spawner;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -112,6 +113,8 @@ public class ObstacleSpawner : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.instance != null && GameManager.instance.isGameOver) return;
+
         foreach (SpawnPoint point in spawnPoints)
         {
             if (Time.time >= point.nextSpawnTime)

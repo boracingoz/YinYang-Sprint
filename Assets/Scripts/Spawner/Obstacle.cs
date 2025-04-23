@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.Managers;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -10,6 +11,17 @@ namespace Assets.Scripts.Spawner
         public Action OnDisableAction;
 
         private float _moveSpeed;
+        private Collider _collider;
+
+        private void Awake()
+        {
+            _collider = GetComponent<Collider>();
+
+            if (_collider != null && !_collider.isTrigger)
+            {
+                _collider.isTrigger = true;
+            }
+        }
 
 
         private void OnEnable()
@@ -38,7 +50,9 @@ namespace Assets.Scripts.Spawner
 
         private void Update()
         {
-            float speed = Assets.Scripts.SyncManager.Instance.obstacleSpeed;
+            if (GameManager.instance != null && GameManager.instance.isGameOver) return;
+
+            //float speed = Assets.Scripts.SyncManager.Instance.obstacleSpeed;
             transform.Translate(Vector3.back * _moveSpeed * Time.deltaTime);
 
             float despawnDistance = obstacleSettings != null ? obstacleSettings.despawnDistance : -10f;
@@ -47,5 +61,7 @@ namespace Assets.Scripts.Spawner
                 gameObject.SetActive(false);
             }
         }
+
+       
     }
 }
