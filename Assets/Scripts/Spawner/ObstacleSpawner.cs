@@ -113,7 +113,7 @@ public class ObstacleSpawner : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.instance != null && GameManager.instance.isGameOver) return;
+        if (GameManager.instance != null && GameManager.instance._isGameOver) return;
 
         foreach (SpawnPoint point in spawnPoints)
         {

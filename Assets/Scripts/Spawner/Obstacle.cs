@@ -50,7 +50,7 @@ namespace Assets.Scripts.Spawner
 
         private void Update()
         {
-            if (GameManager.instance != null && GameManager.instance.isGameOver) return;
+            if (GameManager.instance != null && GameManager.instance._isGameOver) return;
 
             //float speed = Assets.Scripts.SyncManager.Instance.obstacleSpeed;
             transform.Translate(Vector3.back * _moveSpeed * Time.deltaTime);

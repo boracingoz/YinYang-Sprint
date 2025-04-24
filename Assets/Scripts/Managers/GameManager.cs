@@ -10,10 +10,12 @@ namespace Assets.Scripts.Managers
         public static GameManager instance;
 
         [Header("Game State")]
-        public bool isGameOver = false;
+        public bool _isGameOver = false;
+        public bool _isGameWon = false;
 
         [Header("UI Reference")]
         [SerializeField] private GameObject _gameOverPanel;
+        [SerializeField] private GameObject _winPanel;
 
         private void Awake()
         {
@@ -28,7 +30,6 @@ namespace Assets.Scripts.Managers
             }
         }
 
-        // Use this for initialization
         void Start()
         {
             if (_gameOverPanel != null)
@@ -36,20 +37,51 @@ namespace Assets.Scripts.Managers
                 _gameOverPanel.SetActive(false);
             }
 
-            isGameOver = false;
+            if (_winPanel != null)
+            {
+                _winPanel.SetActive(false);
+            }
+
+            _isGameWon = false;
+            _isGameOver = false;
             Time.timeScale = 1f;
         }
 
         public void GameOver()
         {
-            if (isGameOver) return;
+            if (_isGameOver || _isGameWon) return;
 
-            isGameOver = true;
+            _isGameOver = true;
             Debug.Log("GameOver");
 
             if (_gameOverPanel != null)
             {
                 _gameOverPanel.SetActive(true);
+            }
+
+            foreach (var obstacle in FindObjectsOfType<Obstacle>())
+            {
+                Rigidbody rb = obstacle.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    rb.velocity = Vector3.zero;
+                    rb.isKinematic = true;
+                }
+            }
+
+            Time.timeScale = 0f;
+        }
+
+        public void Win()
+        {
+            if (_isGameWon || _isGameOver) return;
+
+            _isGameWon = true;
+            Debug.Log("WİN!");
+
+            if (_winPanel != null)
+            {
+                _winPanel.SetActive(true);
             }
 
             foreach (var obstacle in FindObjectsOfType<Obstacle>())
@@ -70,6 +102,12 @@ namespace Assets.Scripts.Managers
             Time.timeScale = 1f;
 
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+        public void LoadMainMenu() 
+        {
+            Time.timeScale = 1f;
+            SceneManager.LoadScene(0);
         }
     }
 }

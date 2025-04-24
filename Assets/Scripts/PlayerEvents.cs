@@ -13,6 +13,7 @@ namespace Assets.Scripts
 
         [Header("Events")]
         public UnityEvent onPlayerDeath;
+        public UnityEvent onPlayerWin;
 
         // Use this for initialization
         void Start()
@@ -29,7 +30,13 @@ namespace Assets.Scripts
             {
                 Die();
             }
+
+            if (other.GetComponent<SymbolRotator>() != null)
+            {
+                Win();
+            }
         }
+
 
         public void Die()
         {
@@ -39,6 +46,16 @@ namespace Assets.Scripts
             if (gameManager != null)
             {
                 gameManager.GameOver();
+            }
+        }
+        private void Win()
+        {
+            onPlayerWin?.Invoke();
+            GameManager gameManager = FindObjectOfType<GameManager>();
+
+            if (gameManager != null) 
+            { 
+                gameManager.Win(); 
             }
         }
     }
