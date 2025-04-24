@@ -9,7 +9,8 @@ public class CustomCharacterController : MonoBehaviour
     public CharacterSettings characterSettings;
     public LayerMask groundLayer;
 
-    
+    [Header("Input Settings")]
+    public bool userArrowKeys = false;
 
     private int _currentLane = 1;
     private Rigidbody _rb;
@@ -62,26 +63,54 @@ public class CustomCharacterController : MonoBehaviour
 
     private void HandleLaneChange()
     {
-        if (Input.GetKeyDown(KeyCode.LeftArrow)&& _currentLane > -1)
+        if (userArrowKeys)
         {
-            _currentLane--;
-            
+            if (Input.GetKeyDown(KeyCode.LeftArrow) && _currentLane > -1)
+            {
+                _currentLane--;
+
+            }
+            else if (Input.GetKeyDown(KeyCode.RightArrow) && _currentLane < 1)
+            {
+                _currentLane++;
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.RightArrow) && _currentLane < 1)
+        else
         {
-            _currentLane++;
+            if (Input.GetKeyDown(KeyCode.A) && _currentLane > -1)
+            {
+                _currentLane--;
+            }
+            else if(Input.GetKeyDown(KeyCode.D) && _currentLane < 1)
+            {
+                _currentLane++;
+            }
         }
+
     }
 
     private void HandleJump()
     {
         isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f, groundLayer);
 
-        if (Input.GetKeyDown(KeyCode.Space)&& isGrounded && !isJump)
+        if (userArrowKeys)
         {
-            _rb.AddForce(Vector3.up * characterSettings.jumpingForce, ForceMode.Impulse);
-            isJump = true;
+            if (Input.GetKeyDown(KeyCode.UpArrow) && isGrounded && !isJump)
+            {
+                _rb.AddForce(Vector3.up * characterSettings.jumpingForce, ForceMode.Impulse);
+                isJump = true;
+            }
+
         }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.W) && isGrounded && !isJump)
+            {
+                _rb.AddForce(Vector3.up * characterSettings.jumpingForce, ForceMode.Impulse);
+                isJump = true;
+            }
+        }
+
 
         if (isGrounded && _rb.velocity.y <= 0.1f)
         {

@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -470,7 +470,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 300267873}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1, y: 10, z: 19}
+  m_LocalPosition: {x: -1, y: 10, z: 321.6}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 621917255}
@@ -1584,7 +1584,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44a29230b80c7ee47890e49996827c0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forwardSpeed: 10
+  forwardSpeed: 5
   obstacleSpeed: 10
 --- !u!1 &997340834
 GameObject:
@@ -2343,7 +2343,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1578712873}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -252, y: 10, z: 19.100006}
+  m_LocalPosition: {x: -252, y: 10, z: 321.7}
   m_LocalScale: {x: 3, y: 3, z: 2}
   m_Children: []
   m_Father: {fileID: 621917255}
@@ -3155,6 +3155,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 1e4347b91a91dc648bfab8607427a0c3,
         type: 2}
+    - target: {fileID: 6016988439173437725, guid: 96a5ac72885bf1c4d90e900c91da18d3,
+        type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
     - target: {fileID: 6031632386568763078, guid: 96a5ac72885bf1c4d90e900c91da18d3,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -3271,10 +3276,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7113844263087016116, guid: e9f7b758950bda344a604ed3983c23cc,
         type: 3}
+      propertyPath: userArrowKeys
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7113844263087016116, guid: e9f7b758950bda344a604ed3983c23cc,
+        type: 3}
       propertyPath: characterSettings
       value: 
       objectReference: {fileID: 11400000, guid: 1e4347b91a91dc648bfab8607427a0c3,
         type: 2}
+    - target: {fileID: 7113844263087016116, guid: e9f7b758950bda344a604ed3983c23cc,
+        type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
     - target: {fileID: 7292395248919432698, guid: e9f7b758950bda344a604ed3983c23cc,
         type: 3}
       propertyPath: m_RootOrder
