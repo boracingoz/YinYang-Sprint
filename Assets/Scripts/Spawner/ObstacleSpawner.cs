@@ -14,6 +14,7 @@ public class ObstacleSpawner : MonoBehaviour
         public Transform transform;
         public float nextSpawnTime;
         public float currentSpawnRate;
+        public bool isForArrowKeyUser;
     }
 
     [Header("Spawn Settings")]
@@ -25,6 +26,10 @@ public class ObstacleSpawner : MonoBehaviour
 
     [Header("Lane  Settings")]
     public float laneOffset = 2f;
+
+    [Header("Soul Spawning")]
+    public GameObject soulPrefab;
+    public float soulSpawnChance = 0.25f;
 
     private Dictionary <int, Queue<GameObject>> _obstaclePool = new Dictionary <int, Queue<GameObject>>();
     private int _poolSizePerType = 5;
@@ -120,6 +125,12 @@ public class ObstacleSpawner : MonoBehaviour
             if (Time.time >= point.nextSpawnTime)
             {
                 SpawnObstacle(point);
+
+                if (UnityEngine.Random.value > soulSpawnChance)
+                {
+                    SpawnSoul(point);
+                }
+
                 UpdateSpawnRate(point);
             }
         }
@@ -142,6 +153,8 @@ public class ObstacleSpawner : MonoBehaviour
         Obstacle obstacleComponent = obstacle.GetComponent<Obstacle>();
         if (obstacleComponent != null)
         {
+            obstacleComponent.isForArrowKeyUser = spawnPoint.isForArrowKeyUser;
+
             int capturedTypeIndex = obstacleTypeIndex;
             obstacleComponent.OnDisableAction = () =>
             {
@@ -156,6 +169,15 @@ public class ObstacleSpawner : MonoBehaviour
         spawnPoint.nextSpawnTime = Time.time + spawnPoint.currentSpawnRate;
     }
 
+    private void SpawnSoul(SpawnPoint spawnPoint)
+    {
+        if(soulPrefab == null) return;
+
+        int lane = UnityEngine.Random.Range(-1, 2);
+        Vector3 spawnPos = spawnPoint.transform.position + new Vector3(lane * laneOffset, 0.5f, 0);
+
+        GameObject soul = Instantiate(soulPrefab, spawnPos, spawnPoint.transform.rotation);
+    }
 
     private void UpdateSpawnRate(SpawnPoint point)
     {

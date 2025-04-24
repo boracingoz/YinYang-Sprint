@@ -10,6 +10,9 @@ namespace Assets.Scripts.Spawner
         public ObstacleSettings obstacleSettings;
         public Action OnDisableAction;
 
+        [Header("Character Target")]
+        public bool isForArrowKeyUser = false;
+
         private float _moveSpeed;
         private Collider _collider;
 
@@ -33,13 +36,34 @@ namespace Assets.Scripts.Spawner
             }
 
 
-            if (obstacleSettings == null)
+            UpdateSpeed();
+        }
+
+        private void UpdateSpeed()
+        {
+            if (DifficultyManager.instance != null)
             {
-                _moveSpeed = Assets.Scripts.SyncManager.Instance.forwardSpeed * 1.2f;
+                float characterSpeed = DifficultyManager.instance.GetObstacleSpeedForCharacter(isForArrowKeyUser);
+
+                if (obstacleSettings == null)
+                {
+                    _moveSpeed = characterSpeed;
+                }
+                else
+                {
+                    _moveSpeed = characterSpeed * obstacleSettings.speedMultiplier;
+                }
             }
             else
             {
-                _moveSpeed = Assets.Scripts.SyncManager.Instance.forwardSpeed * obstacleSettings.speedMultiplier;
+                if (obstacleSettings == null)
+                {
+                    _moveSpeed = Assets.Scripts.SyncManager.Instance.forwardSpeed * 1.2f;
+                }
+                else
+                {
+                    _moveSpeed = Assets.Scripts.SyncManager.Instance.forwardSpeed * obstacleSettings.speedMultiplier;
+                }
             }
         }
 
@@ -52,7 +76,6 @@ namespace Assets.Scripts.Spawner
         {
             if (GameManager.instance != null && GameManager.instance._isGameOver) return;
 
-            //float speed = Assets.Scripts.SyncManager.Instance.obstacleSpeed;
             transform.Translate(Vector3.back * _moveSpeed * Time.deltaTime);
 
             float despawnDistance = obstacleSettings != null ? obstacleSettings.despawnDistance : -10f;

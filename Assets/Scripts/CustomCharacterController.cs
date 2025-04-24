@@ -44,7 +44,6 @@ public class CustomCharacterController : MonoBehaviour
         HandleLaneChange();
         HandleJump();
         ApplyTiltRotation();
-        CharacterAnim();
     }
 
     private void FixedUpdate()
@@ -137,13 +136,5 @@ public class CustomCharacterController : MonoBehaviour
     public int GetCurrentLane()
     {
         return _currentLane;
-    }
-
-    public void CharacterAnim()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            animator.SetTrigger("SwordAttack");
-        }
     }
 }
