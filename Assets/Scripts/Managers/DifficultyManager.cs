@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.Spawner;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -74,6 +75,11 @@ namespace Assets.Scripts.Managers
 
         private void UpdateObstacleSpawners()
         {
+            Obstacle[] activeObstacles = FindObjectsOfType<Obstacle>();
+            foreach (var obstacle in activeObstacles)
+            {
+                obstacle.UpdateSpeed();
+            }
         }
 
         public float GetObstacleSpeedForCharacter(bool isArrowKeyUsers)

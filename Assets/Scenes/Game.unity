@@ -821,11 +821,11 @@ MonoBehaviour:
   - transform: {fileID: 412487187}
     nextSpawnTime: 0
     currentSpawnRate: 0
-    isForArrowKeyUser: 0
+    isForArrowKeyUser: 1
   - transform: {fileID: 1538699700}
     nextSpawnTime: 1
     currentSpawnRate: 0
-    isForArrowKeyUser: 1
+    isForArrowKeyUser: 0
   obstaclePrefab:
   - {fileID: 2171632531822290048, guid: 9538562fc2e45144d960a7d58c22cf47, type: 3}
   - {fileID: 6513594343633890006, guid: f89b427c24175e14199a0bb4169eda28, type: 3}
@@ -2137,7 +2137,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPoints:
   - transform: {fileID: 412487187}
-    nextSpawnTime: 1
+    nextSpawnTime: 0
     currentSpawnRate: 0
     isForArrowKeyUser: 0
   - transform: {fileID: 1538699700}
@@ -2149,7 +2149,7 @@ MonoBehaviour:
   - {fileID: 6513594343633890006, guid: f89b427c24175e14199a0bb4169eda28, type: 3}
   - {fileID: 3557919939954409734, guid: 18af1e357f8da5d40a727fef33f2faec, type: 3}
   intialSpawnRate: 2
-  minSpawnRate: 2
+  minSpawnRate: 3
   spawnRateDecrease: 0.5
   laneOffset: 2
   soulPrefab: {fileID: 3408255056764518626, guid: 8a6be7f3133348b4290e4d5b0abee6ba,
@@ -2919,8 +2919,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94b825110686840478af2006a69135dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseObstacleSpeed: 2.4
-  increadeSpeedMultiplier: 1.2
+  baseObstacleSpeed: 3
+  increadeSpeedMultiplier: 10
   obstacleSpawners:
   - {fileID: 1538699699}
   - {fileID: 412487188}

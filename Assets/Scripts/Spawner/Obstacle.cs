@@ -39,7 +39,7 @@ namespace Assets.Scripts.Spawner
             UpdateSpeed();
         }
 
-        private void UpdateSpeed()
+        public void UpdateSpeed()
         {
             if (DifficultyManager.instance != null)
             {

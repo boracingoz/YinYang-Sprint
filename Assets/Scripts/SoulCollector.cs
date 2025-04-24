@@ -13,7 +13,7 @@ namespace Assets.Scripts
 
         private void Awake()
         {
-            if (instance = null)
+            if (instance == null)
             {
                 instance = this;
             }
