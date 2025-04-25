@@ -17,6 +17,10 @@ namespace Assets.Scripts.Managers
         [SerializeField] private GameObject _gameOverPanel;
         [SerializeField] private GameObject _winPanel;
 
+
+        private bool _isMusicOn = true;
+        private bool _isSFXOn = true;
+
         private void Awake()
         {
             if (instance == null)
@@ -45,6 +49,16 @@ namespace Assets.Scripts.Managers
             _isGameWon = false;
             _isGameOver = false;
             Time.timeScale = 1f;
+        }
+
+        public void ToggleMusic()
+        {
+            SoundManager.instance.SetMusicVolume(_isMusicOn ? 0f : 1f);
+        }
+
+        public void ToggleSFX()
+        {
+            SoundManager.instance.SetSFXVolume(_isSFXOn ? 0f : 1f); 
         }
 
         public void GameOver()
