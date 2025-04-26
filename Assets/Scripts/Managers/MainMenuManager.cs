@@ -21,12 +21,12 @@ namespace Assets.Scripts.Managers
             SoundManager.instance.LoadVolumeSettings();
         }
 
-        private void PlayGame()
+        public void PlayGame()
         {
             SceneManager.LoadScene("Game");
         }
 
-        private void OpenSettings() 
+        public void OpenSettings() 
         {
             _settingsPanel.SetActive(true);
         }

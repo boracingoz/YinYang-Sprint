@@ -1,252 +1,214 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.SceneManagement;
 
-public class SoundManager : MonoBehaviour
+namespace Assets.Scripts.Managers
 {
-    public static SoundManager instance;
-
-    [Header("Audio Mixer")]
-    [SerializeField] private AudioMixer _audioMixer;
-
-    [Header("Audio Sources")]
-    [SerializeField] private AudioSource _musicSource;
-    [SerializeField] private AudioSource _sfxSource;
-
-    [Header("Music Clips")]
-    [SerializeField] private AudioClip _menuMusic; 
-    [SerializeField] private AudioClip _gameMusic;
-
-    [Header("Settings")]
-    [SerializeField] private bool _enableSFXInMenu = false;
-
-    [Header("Debug")]
-    [SerializeField] private string _currentSceneName;
-    [SerializeField] private bool _debugMode = true;
-
-
-    public const string MASTER_VOL_KEY = "MasterVolume";
-    public const string MUSIC_VOL_KEY = "MusicVolume";
-    public const string SFX_VOL_KEY = "SFXVolume";
-
-    private const string MASTER_PARAM = "MasterVolume";
-    private const string MUSIC_PARAM = "MusicVolume";
-    private const string SFX_PARAM = "SFXVolume";
-
-    private void Awake()
+    public class SoundManager : MonoBehaviour
     {
-        if (instance == null)
+        public static SoundManager instance;
+
+        public const string MASTER_VOL_KEY = "MasterVolume";
+        public const string MUSIC_VOL_KEY = "MusicVolume";
+        public const string SFX_VOL_KEY = "SFXVolume";
+
+        [Header("Audio Sources")]
+        [SerializeField] private AudioSource _musicSource;
+        [SerializeField] private AudioSource _sfxSource;
+
+        [Header("Background Music")]
+        [SerializeField] private AudioClip _mainMenuMusic;
+        [SerializeField] private AudioClip _gameMusic;
+
+        [Header("Game Result Sounds")]
+        [SerializeField] private AudioClip _winSound;
+        [SerializeField] private AudioClip _gameOverSound;
+
+        [Header("SFX Sounds")]
+        [SerializeField] private AudioClip _runningSound;
+        [SerializeField] private AudioClip _jumpSound;
+        [SerializeField] private AudioClip _collectCoinSound;
+
+        // Volume levels
+        private float _masterVolume = 1f;
+        private float _musicVolume = 1f;
+        private float _sfxVolume = 1f;
+
+        private void Awake()
         {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-            SceneManager.sceneLoaded += OnSceneLoaded;
-
-            _currentSceneName= SceneManager.GetActiveScene().name;
-
-
-            if (_debugMode)
+            if (instance == null)
             {
-                Debug.Log($"SoundManager created. Current scene: {_currentSceneName}");
+                instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            if (_musicSource == null)
+            {
+                _musicSource = gameObject.AddComponent<AudioSource>();
+                _musicSource.loop = true;
+            }
+
+            if (_sfxSource == null)
+            {
+                _sfxSource = gameObject.AddComponent<AudioSource>();
+                _sfxSource.loop = false;
             }
         }
-        else
+
+        private void Start()
         {
-            if (_debugMode)
+            LoadVolumeSettings();
+            PlayMainMenuMusic();
+        }
+
+        private void OnEnable()
+        {
+            UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+
+        #region Music Methods
+
+        public void PlayMainMenuMusic()
+        {
+            if (_musicSource == null || _mainMenuMusic == null) return;
+
+            _musicSource.clip = _mainMenuMusic;
+            _musicSource.Play();
+            Debug.Log("Playing main menu music");
+        }
+
+        public void PlayGameMusic()
+        {
+            if (_musicSource == null || _gameMusic == null) return;
+
+            // Stop previous music if playing
+            if (_musicSource.isPlaying)
             {
-                Debug.Log("SoundManager instance already exists. Destroying duplicate.");
+                _musicSource.Stop();
             }
-            Destroy(gameObject);
-            return;
+
+            _musicSource.clip = _gameMusic;
+            _musicSource.Play();
+            Debug.Log("Playing game music");
         }
-    }
 
-    private void Start()
-    {
-        LoadVolumeSettings();
-        if (_musicSource != null)
-            _musicSource.enabled = true;
+        #endregion
 
-        if (_sfxSource != null)
-            _sfxSource.enabled = true;
+        #region SFX Methods
 
-        HandleSceneAudio(_currentSceneName);
-    }
-
-    private void OnDestroy()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        _currentSceneName = scene.name;
-        if (_debugMode)
+        public void PlayRunningSound()
         {
-            Debug.Log($"Scene loaded: {_currentSceneName}");
+            PlaySFX(_runningSound);
         }
 
-        HandleSceneAudio(_currentSceneName);
-
-        _enableSFXInMenu = (scene.name == "Game");
-    }
-
-    private void HandleSceneAudio(string sceneName)
-    {
-        if (sceneName == "MainMenu" || SceneManager.GetActiveScene().buildIndex == 0)
+        public void PlayJumpSound()
         {
-            if (_debugMode)
-                Debug.Log("Main Menu scene detected. Playing menu music.");
-
-            _enableSFXInMenu = false;
-            PlayMenuMusic();
+            PlaySFX(_jumpSound);
         }
-        else 
+
+        public void PlayCoinCollectSound()
         {
-            if (_debugMode)
-                Debug.Log("Game scene detected. Playing game music.");
-
-            _enableSFXInMenu = true;
-            PlayGameMusic();
+            PlaySFX(_collectCoinSound);
         }
-    }
 
-    public void PlayMenuMusic()
-    {
-        if (_musicSource == null)
+        public void PlayWinSound()
         {
-            Debug.LogError("Music source null!");
-            return;
+            PlaySFX(_winSound);
         }
 
-        if (_menuMusic == null)
+        public void PlayGameOverSound()
         {
-            Debug.LogWarning("Menu music clip is not assigned");
-            return;
+            PlaySFX(_gameOverSound);
         }
 
-        _musicSource.enabled = true;
-
-        _musicSource.Stop();
-        _musicSource.clip = _menuMusic;
-        _musicSource.Play();
-
-        if (_debugMode)
-            Debug.Log("Menu music started playing.");
-    }
-
-    public void PlayGameMusic()
-    {
-        if (_musicSource == null)
+        public void PlaySFX(AudioClip clip)
         {
-            Debug.LogError("Music source is null in SoundManager!");
-            return;
+            if (_sfxSource == null || clip == null) return;
+
+            _sfxSource.PlayOneShot(clip, _sfxVolume * _masterVolume);
         }
 
-        if (_gameMusic == null)
+        #endregion
+
+        #region Volume Settings
+
+        public void LoadVolumeSettings()
         {
-            Debug.LogWarning("Game music clip is not assigned in SoundManager!");
-            return;
+            _masterVolume = PlayerPrefs.GetFloat(MASTER_VOL_KEY, 1f);
+            _musicVolume = PlayerPrefs.GetFloat(MUSIC_VOL_KEY, 1f);
+            _sfxVolume = PlayerPrefs.GetFloat(SFX_VOL_KEY, 1f);
+
+            ApplyVolumeSettings();
+
+            Debug.Log($"Loaded volume settings - Master: {_masterVolume}, Music: {_musicVolume}, SFX: {_sfxVolume}");
         }
 
-        _musicSource.enabled = true;
-
-        _musicSource.Stop();
-        _musicSource.clip = _gameMusic;
-        _musicSource.Play();
-
-        if (_debugMode)
-            Debug.Log("Game music started playing.");
-    }
-
-    public void LoadVolumeSettings()
-    {
-        SetMasterVolume(PlayerPrefs.GetFloat(MASTER_VOL_KEY, 1f));
-        SetMusicVolume(PlayerPrefs.GetFloat(MUSIC_VOL_KEY, 1f));
-        SetSFXVolume(PlayerPrefs.GetFloat(SFX_VOL_KEY, 1f));
-    }
-
-    public void SetMasterVolume(float v)
-    {
-        try
+        public void SaveVolumeSettings()
         {
-            float safeVolume = Mathf.Max(0.0001f, v);
-            _audioMixer.SetFloat(MASTER_PARAM, Mathf.Log10(safeVolume) * 20);
-            PlayerPrefs.SetFloat(MASTER_VOL_KEY, v);
+            PlayerPrefs.SetFloat(MASTER_VOL_KEY, _masterVolume);
+            PlayerPrefs.SetFloat(MUSIC_VOL_KEY, _musicVolume);
+            PlayerPrefs.SetFloat(SFX_VOL_KEY, _sfxVolume);
+            PlayerPrefs.Save();
 
-            if (_debugMode)
-                Debug.Log($"Set master volume: {v}");
+            Debug.Log($"Saved volume settings - Master: {_masterVolume}, Music: {_musicVolume}, SFX: {_sfxVolume}");
         }
-        catch (Exception e)
+
+        private void ApplyVolumeSettings()
         {
-            Debug.LogError($"Error setting master volume: {e.Message}");
+            if (_musicSource != null)
+            {
+                _musicSource.volume = _musicVolume * _masterVolume;
+            }
         }
-    }
 
-    public void SetMusicVolume(float v)
-    {
-        try
+        public void SetMasterVolume(float volume)
         {
-            float safeVolume = Mathf.Max(0.0001f, v);
-            _audioMixer.SetFloat(MUSIC_PARAM, Mathf.Log10(safeVolume) * 20);
-            PlayerPrefs.SetFloat(MUSIC_VOL_KEY, v);
-
-            if (_debugMode)
-                Debug.Log($"Set music volume: {v}");
+            _masterVolume = volume;
+            ApplyVolumeSettings();
+            SaveVolumeSettings();
         }
-        catch (Exception e)
+
+        public void SetMusicVolume(float volume)
         {
-            Debug.LogError($"Error setting music volume: {e.Message}");
+            _musicVolume = volume;
+            if (_musicSource != null)
+            {
+                _musicSource.volume = _musicVolume * _masterVolume;
+            }
+            SaveVolumeSettings();
         }
-    }
 
-    public void SetSFXVolume(float v)
-    {
-        try
+        private void OnDisable()
         {
-            float safeVolume = Mathf.Max(0.0001f, v);
-            _audioMixer.SetFloat(SFX_PARAM, Mathf.Log10(safeVolume) * 20);
-            PlayerPrefs.SetFloat(SFX_VOL_KEY, v);
-
-            if (_debugMode)
-                Debug.Log($"Set SFX volume: {v}");
+            UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
         }
-        catch (Exception e)
+
+        private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
         {
-            Debug.LogError($"Error setting SFX volume: {e.Message}");
-        }
-    }
+            Debug.Log($"SoundManager: Scene loaded - {scene.name}");
 
-    public void PlaySFX(AudioClip clip)
-    {
-        if (_sfxSource == null)
+            if (scene.name == "MainMenu")
+            {
+                PlayMainMenuMusic();
+            }
+            else if (scene.name == "Game")
+            {
+                PlayGameMusic();
+            }
+        }
+
+        public void SetSFXVolume(float volume)
         {
-            Debug.LogError("SFX source is null in SoundManager!");
-            return;
+            _sfxVolume = volume;
+            SaveVolumeSettings();
         }
 
-        if (clip == null)
-        {
-            Debug.LogWarning("Attempted to play null audio clip!");
-            return;
-        }
-
-        _sfxSource.enabled = true;
-
-        if (_enableSFXInMenu || _currentSceneName != "MainMenu")
-        {
-            _sfxSource.PlayOneShot(clip);
-
-            if (_debugMode)
-                Debug.Log($"Playing SFX: {clip.name}");
-        }
-        else
-        {
-            if (_debugMode)
-                Debug.Log("SFX ignored: disabled in menu scene.");
-        }
+        #endregion
     }
 }

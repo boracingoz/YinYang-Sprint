@@ -24,6 +24,7 @@ namespace Assets.Scripts.UI
             _masterSlider.onValueChanged.AddListener(SoundManager.instance.SetMasterVolume);
             _musicSlider.onValueChanged.AddListener(SoundManager.instance.SetMusicVolume);
             _sfxSlider.onValueChanged.AddListener(SoundManager.instance.SetSFXVolume);
+
         }
 
         public void CloseSettings()

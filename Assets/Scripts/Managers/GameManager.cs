@@ -32,6 +32,12 @@ namespace Assets.Scripts.Managers
                 Destroy(gameObject);
                 return;
             }
+
+            if (SoundManager.instance != null)
+            {
+                SoundManager.instance.PlayGameMusic();
+                Debug.Log("GameManager: Requested game music from SoundManager");
+            }
         }
 
         void Start()
@@ -46,8 +52,10 @@ namespace Assets.Scripts.Managers
                 _winPanel.SetActive(false);
             }
 
+            Debug.Log("GameManager: Attempting to play game music");
             if (SoundManager.instance != null)
             {
+                Debug.Log("GameManager: SoundManager instance found");
                 SoundManager.instance.PlayGameMusic();
                 Debug.Log("GameManager: Requested game music from SoundManager");
             }
@@ -63,23 +71,15 @@ namespace Assets.Scripts.Managers
 
         public void ToggleMusic()
         {
-            if (SoundManager.instance == null) return;
-
-            _isMusicOn = !_isMusicOn;
             SoundManager.instance.SetMusicVolume(_isMusicOn ? 1f : 0f);
-            Debug.Log($"Music toggled: {(_isMusicOn ? "ON" : "OFF")}");
         }
 
         public void ToggleSFX()
         {
-            if (SoundManager.instance == null) return;
-
-            _isSFXOn = !_isSFXOn;
             SoundManager.instance.SetSFXVolume(_isSFXOn ? 1f : 0f);
-            Debug.Log($"SFX toggled: {(_isSFXOn ? "ON" : "OFF")}");
         }
 
-        
+        public void ReturnToMenu() => SceneManager.LoadScene("MainMenu");
 
         public void GameOver()
         {
@@ -93,10 +93,7 @@ namespace Assets.Scripts.Managers
                 _gameOverPanel.SetActive(true);
             }
 
-            //if (SoundManager.instance != null && _gameOverSound != null)
-            //{
-            //    SoundManager.instance.PlaySFX(_gameOverSound);
-            //}
+            //SoundManager.instance.PlayGameOverMusic();
 
             foreach (var obstacle in FindObjectsOfType<Obstacle>())
             {
@@ -123,10 +120,7 @@ namespace Assets.Scripts.Managers
                 _winPanel.SetActive(true);
             }
 
-            //if (SoundManager.instance != null && _winSound != null)
-            //{
-            //    SoundManager.instance.PlaySFX(_winSound);
-            //}
+            //SoundManager.instance.PlayWinMusic();
 
 
             foreach (var obstacle in FindObjectsOfType<Obstacle>())
