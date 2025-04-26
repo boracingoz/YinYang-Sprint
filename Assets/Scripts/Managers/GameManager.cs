@@ -135,7 +135,7 @@ namespace Assets.Scripts.Managers
 
             Time.timeScale = 0f;
         }
-        
+
         public void RestartGame()
         {
             Time.timeScale = 1f;
@@ -143,7 +143,7 @@ namespace Assets.Scripts.Managers
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
-        public void LoadMainMenu() 
+        public void LoadMainMenu()
         {
             Time.timeScale = 1f;
             SceneManager.LoadScene(0);

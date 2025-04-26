@@ -27,6 +27,20 @@ namespace Assets.Scripts.UI
 
         }
 
+        private void OnEnable()
+        {
+            _masterSlider.value = PlayerPrefs.GetFloat(SoundManager.MASTER_VOL_KEY, 1f);
+            _musicSlider.value = PlayerPrefs.GetFloat(SoundManager.MUSIC_VOL_KEY, 1f);
+            _sfxSlider.value = PlayerPrefs.GetFloat(SoundManager.SFX_VOL_KEY, 1f);
+
+            if (SoundManager.instance != null)
+            {
+                _masterSlider.onValueChanged.AddListener(SoundManager.instance.SetMasterVolume);
+                _musicSlider.onValueChanged.AddListener(SoundManager.instance.SetMusicVolume);
+                _sfxSlider.onValueChanged.AddListener(SoundManager.instance.SetSFXVolume);
+            }
+        }
+
         public void CloseSettings()
         {
             gameObject.SetActive(false);

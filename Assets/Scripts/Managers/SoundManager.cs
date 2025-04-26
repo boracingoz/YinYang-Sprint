@@ -87,7 +87,6 @@ namespace Assets.Scripts.Managers
         {
             if (_musicSource == null || _gameMusic == null) return;
 
-            // Stop previous music if playing
             if (_musicSource.isPlaying)
             {
                 _musicSource.Stop();
@@ -163,7 +162,14 @@ namespace Assets.Scripts.Managers
         {
             if (_musicSource != null)
             {
+                _musicSource.mute = (_musicVolume <= 0f || _masterVolume <= 0f);
                 _musicSource.volume = _musicVolume * _masterVolume;
+            }
+
+            if (_sfxSource != null)
+            {
+                _sfxSource.mute = (_sfxVolume <= 0f || _masterVolume <= 0f);
+                _sfxSource.volume = _sfxVolume * _masterVolume;
             }
         }
 
@@ -174,11 +180,14 @@ namespace Assets.Scripts.Managers
             SaveVolumeSettings();
         }
 
+
         public void SetMusicVolume(float volume)
         {
             _musicVolume = volume;
+
             if (_musicSource != null)
             {
+                _musicSource.mute = (_musicVolume <= 0f || _masterVolume <= 0f);
                 _musicSource.volume = _musicVolume * _masterVolume;
             }
             SaveVolumeSettings();
@@ -203,9 +212,17 @@ namespace Assets.Scripts.Managers
             }
         }
 
+
+
         public void SetSFXVolume(float volume)
         {
             _sfxVolume = volume;
+
+            if (_sfxSource != null)
+            {
+                _sfxSource.mute = (_sfxVolume <= 0f || _masterVolume <= 0f);
+                _sfxSource.volume = _sfxVolume * _masterVolume;
+            }
             SaveVolumeSettings();
         }
 
