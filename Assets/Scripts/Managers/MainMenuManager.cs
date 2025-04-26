@@ -18,8 +18,7 @@ namespace Assets.Scripts.Managers
         {
             _playButton.onClick.AddListener(PlayGame);
             _settingsButton.onClick.AddListener(OpenSettings);
-
-            //SoundManager.instance.LoadVolumeSettings();
+            SoundManager.instance.LoadVolumeSettings();
         }
 
         private void PlayGame()
