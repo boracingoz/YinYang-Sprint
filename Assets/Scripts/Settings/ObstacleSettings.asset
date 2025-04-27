@@ -14,3 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speedMultiplier: 1.2
   despawnDistance: -10
+  obstacleColor: {r: 1, g: 0, b: 0, a: 1}
+  damageAmount: 1
+  isDestructible: 0
+  scoreValue: 0
+  spawnRotation: {x: -90, y: 0, z: 0}

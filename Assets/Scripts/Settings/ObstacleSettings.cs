@@ -16,4 +16,7 @@ public class ObstacleSettings : ScriptableObject
     public int damageAmount = 1;
     public bool isDestructible = false;
     public int scoreValue = 0;
+
+    [Header("Rotation Settings")]
+    public Vector3 spawnRotation = Vector3.zero;
 }

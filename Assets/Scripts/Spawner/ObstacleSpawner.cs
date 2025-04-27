@@ -139,31 +139,23 @@ public class ObstacleSpawner : MonoBehaviour
 
     private void SpawnObstacle(SpawnPoint spawnPoint)
     {
-        int obstacleTypeIndex = UnityEngine.Random.Range(0,obstaclePrefab.Length);
+        int obstacleTypeIndex = UnityEngine.Random.Range(0, obstaclePrefab.Length);
         GameObject obstacle = GetPooledObstacle(obstacleTypeIndex);
-
         if (obstacle == null) return;
+
 
         int lane = UnityEngine.Random.Range(-1, 2);
         Vector3 spawnPos = spawnPoint.transform.position + new Vector3(lane * laneOffset, 0, 0);
 
         obstacle.transform.position = spawnPos;
-        obstacle.transform.rotation = spawnPoint.transform.rotation;
-
         Obstacle obstacleComponent = obstacle.GetComponent<Obstacle>();
-        if (obstacleComponent != null)
+        if (obstacleComponent != null && obstacleComponent.obstacleSettings != null)
         {
-            obstacleComponent.isForArrowKeyUser = spawnPoint.isForArrowKeyUser;
-
-            int capturedTypeIndex = obstacleTypeIndex;
-            obstacleComponent.OnDisableAction = () =>
-            {
-                if (obstacle != null && obstacle.activeSelf)
-                {
-                    obstacle.SetActive(false);
-                    _obstaclePool[capturedTypeIndex].Enqueue(obstacle);
-                }
-            };
+            obstacle.transform.rotation = Quaternion.Euler(obstacleComponent.obstacleSettings.spawnRotation);
+        }
+        else
+        {
+            obstacle.transform.rotation = spawnPoint.transform.rotation;  // Varsayılan
         }
 
         spawnPoint.nextSpawnTime = Time.time + spawnPoint.currentSpawnRate;

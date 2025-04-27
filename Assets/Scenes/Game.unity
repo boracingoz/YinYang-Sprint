@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 939e9a2214e37ec4e8eb4fe85d074704, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 8f59164262fa5d944ac20a3e0f7f2b31, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.22971016, g: 0.14729577, b: 0.2507474, a: 1}
+  m_IndirectSpecularColor: {r: 0.50558203, g: 0.34687644, b: 0.2631322, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -827,9 +827,9 @@ MonoBehaviour:
     currentSpawnRate: 0
     isForArrowKeyUser: 0
   obstaclePrefab:
-  - {fileID: 2171632531822290048, guid: 9538562fc2e45144d960a7d58c22cf47, type: 3}
-  - {fileID: 6513594343633890006, guid: f89b427c24175e14199a0bb4169eda28, type: 3}
-  - {fileID: 3557919939954409734, guid: 18af1e357f8da5d40a727fef33f2faec, type: 3}
+  - {fileID: 2777939032769299152, guid: 43e66a0f80e320d438433b1e0e8fb5f5, type: 3}
+  - {fileID: 122203680119806485, guid: 093042e6d389a8448aa3d8dfef49bbd3, type: 3}
+  - {fileID: 7887155832482010373, guid: 3361e072f468c9c429c1a1431f56b554, type: 3}
   intialSpawnRate: 2
   minSpawnRate: 2
   spawnRateDecrease: 0.5
@@ -2145,9 +2145,9 @@ MonoBehaviour:
     currentSpawnRate: 0
     isForArrowKeyUser: 1
   obstaclePrefab:
-  - {fileID: 2171632531822290048, guid: 9538562fc2e45144d960a7d58c22cf47, type: 3}
-  - {fileID: 6513594343633890006, guid: f89b427c24175e14199a0bb4169eda28, type: 3}
-  - {fileID: 3557919939954409734, guid: 18af1e357f8da5d40a727fef33f2faec, type: 3}
+  - {fileID: 2777939032769299152, guid: 43e66a0f80e320d438433b1e0e8fb5f5, type: 3}
+  - {fileID: 122203680119806485, guid: 093042e6d389a8448aa3d8dfef49bbd3, type: 3}
+  - {fileID: 7887155832482010373, guid: 3361e072f468c9c429c1a1431f56b554, type: 3}
   intialSpawnRate: 2
   minSpawnRate: 3
   spawnRateDecrease: 0.5
