@@ -49,3 +49,6 @@ A live WebGL build will be available here once deployed:
    ```bash
    git clone https://https://github.com/boracingoz/YinYang-Sprint.git
    cd YinYangSprint
+
+
+<img width="1376" height="861" alt="image" src="https://github.com/user-attachments/assets/655ad0ae-53ac-424f-93f1-d0aedc14a7df" />
